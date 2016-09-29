@@ -777,6 +777,8 @@ public class SliderLayout extends RelativeLayout {
             }
 
         }
+
+
     }
 
 }

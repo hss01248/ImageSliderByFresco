@@ -22,7 +22,7 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:24.2.1'
-    compile "com.android.support:support-v4:24.2.1"
+    //compile "com.android.support:support-v4:24.2.1"
     compile 'com.nineoldandroids:library:2.4.0'
     compile 'com.facebook.fresco:fresco:0.10.0'
     compile 'com.facebook.fresco:animated-webp:0.10.0'
