@@ -10,4 +10,7 @@ public class SliderInfo {
     public String imageUrl;
     public Bundle bundle;
 
+    public int imageWidth;
+    public int imageHeight;
+
 }

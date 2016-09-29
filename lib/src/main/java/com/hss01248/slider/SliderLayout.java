@@ -167,6 +167,10 @@ public class SliderLayout extends RelativeLayout {
      */
     Map<String,BaseSliderView> sliderViews ;
 
+
+    private boolean isRunning;
+
+
     /**
      * {@link com.daimajia.slider.library.Indicators.PagerIndicator} shape, rect or oval.
      */
@@ -270,37 +274,44 @@ public class SliderLayout extends RelativeLayout {
      * @param autoRecover if recover after user touches the slider.
      */
     public void startAutoCycle(long delay,long duration,boolean autoRecover){
-        if(mCycleTimer != null) mCycleTimer.cancel();
-        if(mCycleTask != null) mCycleTask.cancel();
-        if(mResumingTask != null) mResumingTask.cancel();
-        if(mResumingTimer != null) mResumingTimer.cancel();
-        mSliderDuration = duration;
-        mCycleTimer = new Timer();
-        mAutoRecover = autoRecover;
-        mCycleTask = new TimerTask() {
-            @Override
-            public void run() {
-                mh.sendEmptyMessage(0);
-            }
-        };
-        mCycleTimer.schedule(mCycleTask,delay,mSliderDuration);
-        mCycling = true;
-        mAutoCycle = true;
+        if (!isRunning){
+            isRunning = true;
+            if(mCycleTimer != null) mCycleTimer.cancel();
+            if(mCycleTask != null) mCycleTask.cancel();
+            if(mResumingTask != null) mResumingTask.cancel();
+            if(mResumingTimer != null) mResumingTimer.cancel();
+            mSliderDuration = duration;
+            mCycleTimer = new Timer();
+            mAutoRecover = autoRecover;
+            mCycleTask = new TimerTask() {
+                @Override
+                public void run() {
+                    mh.sendEmptyMessage(0);
+                }
+            };
+            mCycleTimer.schedule(mCycleTask,delay,mSliderDuration);
+            mCycling = true;
+            mAutoCycle = true;
+        }
+
     }
 
     /**
      * pause auto cycle.
      */
     private void pauseAutoCycle(){
-        if(mCycling){
-            mCycleTimer.cancel();
-            mCycleTask.cancel();
-            mCycling = false;
-        }else{
-            if(mResumingTimer != null && mResumingTask != null){
-                recoverCycle();
+
+            if(mCycling){
+                mCycleTimer.cancel();
+                mCycleTask.cancel();
+                mCycling = false;
+            }else{
+                if(mResumingTimer != null && mResumingTask != null){
+                    recoverCycle();
+                }
             }
-        }
+
+
     }
 
     /**
@@ -320,44 +331,53 @@ public class SliderLayout extends RelativeLayout {
      * stop the auto circle
      */
     public void stopAutoCycle(){
-        if(mCycleTask!=null){
-            mCycleTask.cancel();
+
+        if (isRunning){
+            isRunning = false;
+            if(mCycleTask!=null){
+                mCycleTask.cancel();
+            }
+            if(mCycleTimer!= null){
+                mCycleTimer.cancel();
+            }
+            if(mResumingTimer!= null){
+                mResumingTimer.cancel();
+            }
+            if(mResumingTask!=null){
+                mResumingTask.cancel();
+            }
+            mAutoCycle = false;
+            mCycling = false;
         }
-        if(mCycleTimer!= null){
-            mCycleTimer.cancel();
-        }
-        if(mResumingTimer!= null){
-            mResumingTimer.cancel();
-        }
-        if(mResumingTask!=null){
-            mResumingTask.cancel();
-        }
-        mAutoCycle = false;
-        mCycling = false;
+
     }
 
     /**
      * when paused cycle, this method can weak it up.
      */
     private void recoverCycle(){
-        if(!mAutoRecover || !mAutoCycle){
-            return;
-        }
 
-        if(!mCycling){
-            if(mResumingTask != null && mResumingTimer!= null){
-                mResumingTimer.cancel();
-                mResumingTask.cancel();
+            if(!mAutoRecover || !mAutoCycle){
+                return;
             }
-            mResumingTimer = new Timer();
-            mResumingTask = new TimerTask() {
-                @Override
-                public void run() {
-                    startAutoCycle();
+
+            if(!mCycling){
+                if(mResumingTask != null && mResumingTimer!= null){
+                    mResumingTimer.cancel();
+                    mResumingTask.cancel();
                 }
-            };
-            mResumingTimer.schedule(mResumingTask, 6000);
-        }
+                mResumingTimer = new Timer();
+                mResumingTask = new TimerTask() {
+                    @Override
+                    public void run() {
+                        startAutoCycle();
+                    }
+                };
+                mResumingTimer.schedule(mResumingTask, 6000);
+            }
+
+
+
     }
 
 
@@ -741,6 +761,15 @@ public class SliderLayout extends RelativeLayout {
 //然后是添加或更新
 
         for (SliderInfo info : datas){
+
+            if (width >0 && height >0){
+                if (info.imageHeight ==0 || info.imageWidth == 0){
+                    info.imageWidth = width;
+                    info.imageHeight = height;
+                }
+            }
+
+
             if (sliderViews.get(info.imageUrl) == null){//如果集合中没有，就添加
 
                 //  Logger.json(JSON.toJSONString(info));
@@ -755,7 +784,7 @@ public class SliderLayout extends RelativeLayout {
                 // initialize a SliderLayout
                 textSliderView
                         .description(info.desc)
-                        .image(info.imageUrl)
+                        .image(info.imageUrl).imageWidth(info.imageWidth).imageHeight(info.imageHeight)
                         .setScaleType(BaseSliderView.ScaleType.CenterCrop)
                         .setOnSliderClickListener(listener);
 
@@ -772,7 +801,8 @@ public class SliderLayout extends RelativeLayout {
                 BaseSliderView textSliderView  = sliderViews.get(info.imageUrl);
                 textSliderView
                         .description(info.desc)
-                        .image(info.imageUrl);
+                        .image(info.imageUrl).imageWidth(info.imageWidth).imageHeight(info.imageHeight);
+
                 textSliderView.bundle(info.bundle);
             }
 
@@ -780,5 +810,17 @@ public class SliderLayout extends RelativeLayout {
 
 
     }
+
+    public void setImageDimension(int width,int height){
+            this.width = width;
+        this.height = height;
+    }
+
+    private int width;
+    private int height;
+
+
+
+
 
 }

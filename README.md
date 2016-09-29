@@ -16,6 +16,14 @@ Sliderlayout增加动态更新的方法:
 refreshSlider(List<SliderInfo> datas, BaseSliderView.OnSliderClickListener listener)
 ```
 
+```
+public void setImageDimension(int width,int height)
+```
+
+
+
+解决了多次调用startAutoCycle() 出现快速滚动两页的bug
+
 
 
 
@@ -53,8 +61,9 @@ Step 2. Add the dependency
 
 ```java
 dependencies {
-        compile 'com.github.hss01248:ImageSliderByFresco:1.0.0'
+        compile 'com.github.hss01248:ImageSliderByFresco:1.0.2'
         compile 'com.daimajia.androidanimations:library:1.0.3@aar'
+          
         compile 'com.facebook.fresco:fresco:0.10.0'
     	compile 'com.facebook.fresco:animated-webp:0.10.0'
     	compile 'com.facebook.fresco:animated-gif:0.10.0'
@@ -114,9 +123,8 @@ There are some default indicators. If you want to use a provided indicator:
 
 ```
 startAutoCycle() 
-pauseAutoCycle()
+
 stopAutoCycle()
-recoverCycle()
 
 ```
 

@@ -44,6 +44,9 @@ public abstract class BaseSliderView {
     private File mFile;
     private int mRes;
 
+    private int imageWidth;
+    private int imageHeight;
+
     protected OnSliderClickListener mOnSliderClickListener;
 
     private boolean mErrorDisappear;
@@ -106,6 +109,23 @@ public abstract class BaseSliderView {
         mDescription = description;
         return this;
     }
+
+    public BaseSliderView imageWidth(int imageWidth){
+        if (imageWidth<0){
+            imageWidth = 0;
+        }
+        this.imageWidth = imageWidth;
+        return this;
+    }
+
+    public BaseSliderView imageHeight(int imageHeight){
+        if (imageHeight<0){
+            imageHeight = 0;
+        }
+        this.imageHeight = imageHeight;
+        return this;
+    }
+
 
     /**
      * set a url as a image that preparing to load
@@ -347,7 +367,7 @@ public abstract class BaseSliderView {
             }
         };
 
-        FrescoUtil.load(uri,targetImageView,null,0,0,null);
+        FrescoUtil.load(uri,targetImageView,null,imageWidth,imageHeight,null);
 
        /* AbstractDraweeController controller = Fresco.newDraweeControllerBuilder()
                 .setUri(uri)
