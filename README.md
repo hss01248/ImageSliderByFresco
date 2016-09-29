@@ -1,21 +1,24 @@
 # Android Image Slider 
 
+
+
 # 说明
 
 本项目fork自 [https://github.com/daimajia/AndroidImageSlider](https://github.com/daimajia/AndroidImageSlider)
 
-对其进行一些改写:
+## 对其进行一些改写:
 
 
 
 图片加载组件改成fresco.
 
-Sliderlayout增加动态更新的方法:
+Sliderlayout增加动态更新的方法:用于设置数据和刷新数据
 
 ```
 refreshSlider(List<SliderInfo> datas, BaseSliderView.OnSliderClickListener listener)
 ```
 
+设置图片大小(用于服务器压缩和向下采样)
 ```
 public void setImageDimension(int width,int height)
 ```
@@ -26,7 +29,7 @@ public void setImageDimension(int width,int height)
 
 
 
-
+## 原说明
 
 This is an amazing image slider for the Android platform. I decided to open source this because there is really not an attractive, convenient slider widget in Android.
 
